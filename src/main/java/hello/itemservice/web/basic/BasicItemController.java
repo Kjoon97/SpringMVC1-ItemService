@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.PostConstruct;
@@ -33,6 +34,17 @@ public class BasicItemController {
         model.addAttribute("item",item);
         return "basic/item";
     }
+
+    @GetMapping("/add")
+    public String addForm(){
+        return "basic/addForm";
+    }
+
+    @PostMapping("/add")    // '/add'가 요청될 때 Post 방식일때는 이게 호출됨.('등록하기' 버튼 누르면 이게 호출됨 -Form -Post 방식이므로)
+    public String save(){
+        return "basic/addForm";
+    }
+
 
     //테스트용 데이터 추가
     @PostConstruct
