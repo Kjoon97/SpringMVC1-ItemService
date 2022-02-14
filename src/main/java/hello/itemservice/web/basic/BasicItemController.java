@@ -32,6 +32,23 @@ public class BasicItemController {
         return "basic/item";
     }
 
+    //수정 페이지 요청하기
+    @GetMapping("/{itemId}/edit")
+    public String editForm(@PathVariable Long itemId, Model model){
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+        return "basic/editForm";
+    }
+
+    //수정 페이지에 등록 요청하기
+    @PostMapping("/{itemId}/edit")
+    public String edit(@PathVariable Long itemId, @ModelAttribute Item item){
+        itemRepository.update(itemId, item);
+        return "redirect:/basic/items/{itemId}";
+    }
+
+
+
     @GetMapping("/add")
     public String addForm(){
         return "basic/addForm";
@@ -68,12 +85,22 @@ public class BasicItemController {
     }
 
     //addItemV3()에서 더 나아가 @ModelAttribute 생략 가능
-    @PostMapping("/add")
+    //@PostMapping("/add")
     public String addItemV4(Item item){  //파라미터에 string, int 같은 일반형식이면 @RquestParam이 동작하지만 그외 객체인 경우는 @modelAttribute가 자동으로 동작한다.
 
         itemRepository.save(item);
 
         return "basic/item";   //클래스 명 Item이므로 -> 앞글자 소문자 변환한 item으로 model이름이 설정되어 넘어간다. ex) model.addAttribute("item",item);
+    }
+    //addItemV1~V4는 문제점이 있다. 새로고침 시마다 POST/add 요청을 하게되어 같은 상품이 계속 등록된다
+
+    //리다이렉트 addItemV1~V4 문제점 보완.
+    @PostMapping("/add")
+    public String addItemV5(Item item){
+
+        itemRepository.save(item);
+
+        return "redirect:/basic/items/" + item.getId();
     }
 
     //테스트용 데이터 추가
